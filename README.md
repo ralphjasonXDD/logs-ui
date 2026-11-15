@@ -1,36 +1,33 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# logs-ui
 
-## Getting Started
+Simple Grafana-style logs explorer backed by Azure Managed Grafana’s HTTP API.
 
-First, run the development server:
+Queries go through Next.js API routes so the Grafana service-account token never hits the browser.
+
+## Setup
 
 ```bash
+cd logs-ui
+cp .env.example .env.local
+cp config/sources.example.json config/sources.json
+# fill GRAFANA_URL, GRAFANA_TOKEN, and the cluster resource ids
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`config/sources.json` is gitignored. It lists services, namespaces, pod prefixes, and which cluster each one queries. Set `SOURCES_PATH` if that file lives somewhere else.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Open [http://localhost:3000](http://localhost:3000).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Features
 
-## Learn More
+- Service / environment picker (CMS, Gateway, McGrath API, etc.)
+- Time range + text search
+- Click a row to expand pretty JSON
+- **Older logs →** pagination (cursor on oldest `TimeGenerated`)
+- Optional 30s auto-refresh
 
-To learn more about Next.js, take a look at the following resources:
+## API
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `GET /api/sources` — available sources + time ranges
+- `GET /api/logs?sourceId=cms-production&range=1h&search=error&limit=100&beforeMs=...`

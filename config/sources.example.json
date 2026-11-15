@@ -1,0 +1,26 @@
+{
+  "clusters": {
+    "production": "/foo/production",
+    "nonprod": "/foo/nonprod"
+  },
+  "sources": [
+    {
+      "id": "cms-production",
+      "label": "CMS · Production",
+      "service": "CMS",
+      "env": "production",
+      "namespace": "cms-production",
+      "podPrefix": "cms-production-",
+      "cluster": "production"
+    },
+    {
+      "id": "cms-staging",
+      "label": "CMS · Staging",
+      "service": "CMS",
+      "env": "staging",
+      "namespace": "cms-staging",
+      "podPrefix": "cms-staging-",
+      "cluster": "nonprod"
+    }
+  ]
+}
